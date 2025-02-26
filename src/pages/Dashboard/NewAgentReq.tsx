@@ -53,7 +53,7 @@ const NewAgentReq = () => {
       try {
         // Assuming token is defined before this point
         const response = await axios.get(
-          "http://localhost:5000/admin-control-panel/new-agents",
+          "https://mfs-web-app-backend.vercel.app/admin-control-panel/new-agents",
           {
             headers: {
               "Content-Type": "application/json",
@@ -81,16 +81,19 @@ const NewAgentReq = () => {
 
   const handleVerify = (agentId: string) => {
     // Implement verification logic here
-    // http://localhost:5000/auth/:id PATCH
+    // https://mfs-web-app-backend.vercel.app/auth/:id PATCH
 
     try {
-      const response = fetch(`http://localhost:5000/auth/${agentId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: String(token),
-        },
-      });
+      const response = fetch(
+        `https://mfs-web-app-backend.vercel.app/auth/${agentId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: String(token),
+          },
+        }
+      );
       response.then(() => {
         toast({
           title: "Agent Verified!",

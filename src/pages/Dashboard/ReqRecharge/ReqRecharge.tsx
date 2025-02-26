@@ -14,12 +14,15 @@ const ReqRecharge = () => {
     queryFn: async () => {
       try {
         // Assuming token is defined before this point
-        const response = await axios.get("http://localhost:5000/recharge", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: String(token),
-          },
-        });
+        const response = await axios.get(
+          "https://mfs-web-app-backend.vercel.app/recharge",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: String(token),
+            },
+          }
+        );
         return response.data.data[response.data.data.length - 1];
       } catch (err: any) {
         throw new Error(`Error fetching data: ${err.message}`);
@@ -47,7 +50,7 @@ const ReqRecharge = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:5000/recharge",
+        "https://mfs-web-app-backend.vercel.app/recharge",
         { amount }, // Assuming you have a default pin or you get it from somewhere
         {
           headers: {

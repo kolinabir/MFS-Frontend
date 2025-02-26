@@ -30,7 +30,7 @@ const CashOut = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/transaction/cash-out",
+        "https://mfs-web-app-backend.vercel.app/transaction/cash-out",
         { mobileNumber, amount, pin },
         {
           headers: {

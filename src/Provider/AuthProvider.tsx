@@ -28,7 +28,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (token) {
         try {
           const response = await fetch(
-            "http://localhost:5000/auth/check-auth",
+            "https://mfs-web-app-backend.vercel.app/auth/check-auth",
             {
               headers: {
                 Authorization: token,
@@ -72,11 +72,14 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // const service = { emailOrMBNo, pin };
 
     try {
-      const response = await fetch("http://localhost:5000/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(service),
-      });
+      const response = await fetch(
+        "https://mfs-web-app-backend.vercel.app/auth/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(service),
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
@@ -96,7 +99,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const signOut = () => {
     try {
-      fetch("http://localhost:5000/auth/logout", {
+      fetch("https://mfs-web-app-backend.vercel.app/auth/logout", {
         method: "GET",
         headers: {
           Authorization: localStorage.getItem("token") || "",

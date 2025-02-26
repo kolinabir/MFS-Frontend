@@ -23,7 +23,7 @@ export function ViewTransactions() {
     try {
       if (user?.role === "ADMIN") {
         const response = await axios.get(
-          `http://localhost:5000/transaction/transaction/${mobileNumber}`,
+          `https://mfs-web-app-backend.vercel.app/transaction/transaction/${mobileNumber}`,
           {
             headers: {
               Authorization: `${localStorage.getItem("token")}`,
@@ -33,11 +33,14 @@ export function ViewTransactions() {
         console.log(response.data);
         return response.data;
       } else {
-        const response = await axios.get(`http://localhost:5000/transaction`, {
-          headers: {
-            Authorization: `${localStorage.getItem("token")}`,
-          },
-        });
+        const response = await axios.get(
+          `https://mfs-web-app-backend.vercel.app/transaction`,
+          {
+            headers: {
+              Authorization: `${localStorage.getItem("token")}`,
+            },
+          }
+        );
         console.log(response.data);
         return response.data;
       }

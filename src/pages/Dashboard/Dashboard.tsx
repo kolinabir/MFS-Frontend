@@ -29,7 +29,7 @@ const Dashboard = () => {
     queryFn: async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/admin-control-panel/details",
+          "https://mfs-web-app-backend.vercel.app/admin-control-panel/details",
           {
             headers: {
               "Content-Type": "application/json",
@@ -53,7 +53,7 @@ const Dashboard = () => {
     queryFn: async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/transaction/balance",
+          "https://mfs-web-app-backend.vercel.app/transaction/balance",
           {
             headers: {
               "Content-Type": "application/json",

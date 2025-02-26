@@ -57,12 +57,15 @@ const UserCollection = () => {
           ? "/admin-control-panel/users"
           : "/admin-control-panel/blocked-users";
 
-        const response = await axios.get(`http://localhost:5000${endpoint}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: String(token),
-          },
-        });
+        const response = await axios.get(
+          `https://mfs-web-app-backend.vercel.app${endpoint}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: String(token),
+            },
+          }
+        );
 
         return response.data.data;
       } catch (err: any) {
@@ -78,7 +81,7 @@ const UserCollection = () => {
       const endpoint = agent.isAccountActive ? "block" : "unblock";
 
       await axios.patch(
-        `http://localhost:5000/admin-control-panel/${agent._id}/${endpoint}`,
+        `https://mfs-web-app-backend.vercel.app/admin-control-panel/${agent._id}/${endpoint}`,
         { userId: agent._id },
         {
           headers: {

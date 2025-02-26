@@ -40,12 +40,15 @@ const ViewReqRecharge = () => {
     queryKey: ["rechargeRequests"],
     queryFn: async () => {
       try {
-        const response = await axios.get("http://localhost:5000/recharge", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: String(token),
-          },
-        });
+        const response = await axios.get(
+          "https://mfs-web-app-backend.vercel.app/recharge",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: String(token),
+            },
+          }
+        );
 
         return response.data.data;
       } catch (err: any) {
@@ -59,10 +62,10 @@ const ViewReqRecharge = () => {
 
   const handleApproveButtonClick = async (request: string) => {
     console.log(request);
-    // http://localhost:5000/recharge/65db8cfa8ab52e247830bc00/approve
+    // https://mfs-web-app-backend.vercel.app/recharge/65db8cfa8ab52e247830bc00/approve
     try {
       await axios.patch(
-        `http://localhost:5000/recharge/${request}/approve`,
+        `https://mfs-web-app-backend.vercel.app/recharge/${request}/approve`,
         {},
         {
           headers: {

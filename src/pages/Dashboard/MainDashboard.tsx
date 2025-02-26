@@ -28,7 +28,7 @@ const MainDashboard = () => {
       try {
         if (user?.role === "ADMIN") {
           const response = await axios.get(
-            "http://localhost:5000/admin-control-panel/all-money",
+            "https://mfs-web-app-backend.vercel.app/admin-control-panel/all-money",
             {
               headers: {
                 "Content-Type": "application/json",
@@ -49,7 +49,7 @@ const MainDashboard = () => {
   const handleSearchBalanceByPhone = async (phoneNo: string) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/admin-control-panel/balance/${phoneNo}`,
+        `https://mfs-web-app-backend.vercel.app/admin-control-panel/balance/${phoneNo}`,
         {
           headers: {
             "Content-Type": "application/json",

@@ -38,7 +38,7 @@ const SendMoney = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/transaction/send-money",
+        "https://mfs-web-app-backend.vercel.app/transaction/send-money",
         { mobileNumber, amount },
         {
           headers: {

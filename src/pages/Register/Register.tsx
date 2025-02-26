@@ -39,20 +39,23 @@ function Register() {
     try {
       setLoading(true);
       console.log(name, pin, mobileNumber, email, role, nid);
-      const response = await fetch("http://localhost:5000/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: name,
-          pin: pin,
-          mobileNumber: mobileNumber,
-          email: email,
-          role: role,
-          nid: nid,
-        }),
-      });
+      const response = await fetch(
+        "https://mfs-web-app-backend.vercel.app/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: name,
+            pin: pin,
+            mobileNumber: mobileNumber,
+            email: email,
+            role: role,
+            nid: nid,
+          }),
+        }
+      );
       response.json();
 
       toast({
