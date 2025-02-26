@@ -11,78 +11,86 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
+    <nav className="bg-gradient-to-r from-blue-600 to-blue-800 fixed w-full z-20 top-0 start-0 shadow-lg">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <a
-          href="https://flowbite.com/"
+        <NavLink
+          to="/"
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
-          <img
-            src="https://flowbite.com/docs/images/logo.svg"
-            className="h-8"
-            alt="Flowbite Logo"
-          />
-          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-            MFS App Demo
+          <svg
+            className="w-8 h-8 text-white"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.91c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z" />
+          </svg>
+          <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">
+            MFS Wallet
           </span>
-        </a>
-        <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+        </NavLink>
+
+        <div className="flex md:order-2 items-center">
           {user ? (
-            <div>
+            <div className="flex items-center space-x-4">
               <NavLink
                 to="/dashboard"
-                className="inline-block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                className="text-white hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors"
               >
                 Dashboard
               </NavLink>
-              <div>{user.email}</div>
+              <div className="hidden md:block text-white bg-blue-700 px-4 py-2 rounded-lg">
+                {user.email}
+              </div>
             </div>
           ) : (
-            <div className="gap-10 flex">
+            <div className="flex gap-4">
               <NavLink
                 to="/"
-                className="text-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                className="text-white hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors hidden md:block"
               >
                 Home
               </NavLink>
               <NavLink
                 to="/register"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                className="bg-white text-blue-700 hover:bg-gray-100 px-4 py-2 rounded-lg font-medium transition-colors"
               >
                 Register
               </NavLink>
             </div>
           )}
           <button
-            type="button"
-            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
             onClick={toggleMenu}
-            aria-expanded={isMenuOpen}
+            className="md:hidden ml-4 text-white hover:bg-blue-700 p-2 rounded-lg"
           >
-            <span className="sr-only">Open main menu</span>
             <svg
-              className="w-5 h-5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
+              className="w-6 h-6"
               fill="none"
-              viewBox="0 0 17 14"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
               <path
-                stroke="currentColor"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                d="M1 1h15M1 7h15M1 13h15"
+                d="M4 6h16M4 12h16m-16 6h16"
               />
             </svg>
           </button>
         </div>
-        <div
-          className={`items-center justify-between w-full md:flex md:w-auto md:order-1 ${
-            isMenuOpen ? "" : "hidden"
-          }`}
-          id="navbar-sticky"
-        ></div>
+
+        {isMenuOpen && (
+          <div className="w-full md:hidden mt-4">
+            <div className="flex flex-col space-y-2 bg-blue-700 rounded-lg p-4">
+              <NavLink
+                to="/"
+                className="text-white hover:bg-blue-600 px-4 py-2 rounded"
+              >
+                Home
+              </NavLink>
+              {user && <div className="text-white px-4 py-2">{user.email}</div>}
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );
