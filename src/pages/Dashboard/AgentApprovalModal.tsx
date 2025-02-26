@@ -15,7 +15,11 @@ interface Agent {
   email: string;
   role: string;
   nid: string;
-  // ...other properties
+  balance: number;
+  isAccountActive: boolean;
+  isAccountVerified: boolean;
+  devicesLogins: number;
+  createdAt?: string;
 }
 
 interface AgentApprovalModalProps {

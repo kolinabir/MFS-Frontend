@@ -10,6 +10,9 @@ import { BounceLoader } from "react-spinners";
 const MainDashboard = () => {
   const { user, loading } = useContext(AuthContext) as AuthContextProps;
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+  const [balanceByPhone, setBalanceByPhone] = useState("");
+
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -18,55 +21,11 @@ const MainDashboard = () => {
       navigate("/");
     }
   }
-  const { data: userDetails } = useQuery({
-    queryKey: ["userDetails"],
-    queryFn: async () => {
-      try {
-        // Assuming token is defined before this point
-        const response = await axios.get(
-          "http://localhost:5000/admin-control-panel/details",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: String(token),
-            },
-          }
-        );
-        console.log(response.data.data);
-        return response.data.data;
-      } catch (err: any) {
-        throw new Error(`Error fetching data: ${err.message}`);
-      }
-    },
-    select: (data) => data,
-  });
-  const token = localStorage.getItem("token");
-  const { data: balance, isLoading: balanceLoading } = useQuery({
-    queryKey: ["balance"],
-    queryFn: async () => {
-      try {
-        // Assuming token is defined before this point
-        const response = await axios.get(
-          "http://localhost:5000/admin-control-panel/balance",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: String(token),
-            },
-          }
-        );
-        return response.data.data[0].balance;
-      } catch (err: any) {
-        throw new Error(`Error fetching data: ${err.message}`);
-      }
-    },
-    select: (data) => data,
-  });
+
   const { data: allMoney, isLoading: allMoneyLoading } = useQuery({
     queryKey: ["allMoney"],
     queryFn: async () => {
       try {
-        // Assuming token is defined before this point
         if (user?.role === "ADMIN") {
           const response = await axios.get(
             "http://localhost:5000/admin-control-panel/all-money",
@@ -86,7 +45,7 @@ const MainDashboard = () => {
     },
     select: (data) => data,
   });
-  const [balanceByPhone, setBalanceByPhone] = useState("");
+
   const handleSearchBalanceByPhone = async (phoneNo: string) => {
     try {
       const response = await axios.get(
@@ -104,175 +63,86 @@ const MainDashboard = () => {
     }
   };
 
-  // Example usage in the component
-
   return (
-    <div>
-      <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
-        <div className="grid grid-cols-3 gap-4 mb-4">
-          <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
-            <p className="text-2xl text-black dark:text-gray-500">
-              {balanceLoading ? (
-                <BounceLoader color="#000" size={20} />
-              ) : (
-                <span>Balance : {balance} TK</span>
-              )}
-            </p>
-          </div>
-          <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
-            <p className="text-2xl text-black dark:text-gray-500">
-              {user?.role !== "ADMIN" ? (
-                <span>
-                  {/* user should be added */}
-                  <svg
-                    className="w-3.5 h-3.5"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 18 18"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9 1v16M1 9h16"
-                    />
-                  </svg>
-                </span>
-              ) : (
-                <span>
-                  {allMoneyLoading ? (
-                    <BounceLoader color="#000" size={20} />
-                  ) : (
-                    <span>All Money : {allMoney} TK</span>
-                  )}
-                </span>
-              )}
-            </p>
-          </div>
-          <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
-            {user?.role === "ADMIN" && (
-              <p className="text-2xl text-black dark:text-gray-500 w-full">
-                <h1 className="text-base text-center">View Balance</h1>
-                <div className="mx-4">
-                  <div className="grid grid-cols-1">
-                    <input
-                      onChange={(e) =>
-                        handleSearchBalanceByPhone(e.target.value)
-                      }
-                      className=" text-xs w-full p-1 mt-2 border-2 border-gray-200 rounded-lg dark:border-gray-700"
-                      type="text"
-                      placeholder="just enter phone no of User/Agent"
-                    />
-                    {/* <button className="col-span-2 w-full text-sm mt-2 bg-blue-500 rounded-lg dark:bg-gray-700">
-                    View
-                  </button> */}
-                  </div>
-                </div>
-                <p className="text-base text-center">
-                  Balance {balanceByPhone} TK
-                </p>
+    <div className="flex items-center justify-center min-h-[80vh] p-4">
+      <div className="w-full max-w-2xl bg-white rounded-xl shadow-lg p-8 border border-gray-100">
+        <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">
+          Dashboard Overview
+        </h1>
+
+        {user?.role === "ADMIN" && (
+          <div className="mb-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-sm border border-blue-100">
+            <h2 className="text-xl font-semibold mb-3 text-gray-700 flex items-center justify-center">
+              <svg
+                className="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
+              </svg>
+              All Money
+            </h2>
+            {allMoneyLoading ? (
+              <div className="flex justify-center my-4">
+                <BounceLoader color="#4F46E5" size={24} />
+              </div>
+            ) : (
+              <p className="text-3xl font-bold text-center text-indigo-600">
+                {allMoney} TK
               </p>
             )}
           </div>
-        </div>
-        {user?.role === "AGENT" && (
-          <div className="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
-            <p className="text-2xl text-gray-400 dark:text-gray-500">
-              {userDetails?.isAccountVerified === false &&
-                "Your account is not verified yet"}
-            </p>
-          </div>
         )}
 
-        <div className="flex items-center justify-center h-32 mb-4 rounded bg-gray-50 dark:bg-gray-800">
-          <p className="text-2xl text-gray-400 dark:text-gray-500">
-            Welcome {userDetails?.name}
-          </p>
-        </div>
-        <div className="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
-          <p className="text-2xl text-gray-400 dark:text-gray-500">
-            {user?.role}
-          </p>
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-            <p className="text-2xl text-gray-400 dark:text-gray-500">
-              <svg
-                className="w-3.5 h-3.5"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 18 18"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 1v16M1 9h16"
-                />
-              </svg>
-            </p>
+        <div className="p-6 bg-gradient-to-r from-gray-50 to-slate-50 rounded-lg shadow-sm border border-gray-100">
+          <h2 className="text-xl font-semibold mb-4 text-gray-700 flex items-center justify-center">
+            <svg
+              className="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              ></path>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+              ></path>
+            </svg>
+            View Balance
+          </h2>
+          <div className="mb-5">
+            <input
+              onChange={(e) => handleSearchBalanceByPhone(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 focus:border-blue-400 transition-all outline-none"
+              type="text"
+              placeholder="Enter phone number of User/Agent"
+            />
           </div>
-          <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-            <p className="text-2xl text-gray-400 dark:text-gray-500">
-              <svg
-                className="w-3.5 h-3.5"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 18 18"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 1v16M1 9h16"
-                />
-              </svg>
-            </p>
-          </div>
-          <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-            <p className="text-2xl text-gray-400 dark:text-gray-500">
-              <svg
-                className="w-3.5 h-3.5"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 18 18"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 1v16M1 9h16"
-                />
-              </svg>
-            </p>
-          </div>
-          <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-            <p className="text-2xl text-gray-400 dark:text-gray-500">
-              <svg
-                className="w-3.5 h-3.5"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 18 18"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 1v16M1 9h16"
-                />
-              </svg>
-            </p>
-          </div>
+          {balanceByPhone && (
+            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg text-center">
+              <p className="text-lg font-medium text-gray-700">
+                Balance:{" "}
+                <span className="font-bold text-blue-700">
+                  {balanceByPhone} TK
+                </span>
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

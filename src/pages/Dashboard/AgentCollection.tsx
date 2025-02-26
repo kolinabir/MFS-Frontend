@@ -246,7 +246,7 @@ const AgentCollection = () => {
     csvContent += csvHeaders.map((header) => header.label).join(",") + "\r\n";
 
     // Add data rows
-    formattedData.forEach((agent) => {
+    formattedData.forEach((agent: any) => {
       const row = csvHeaders
         .map((header) => {
           // Escape commas in values
