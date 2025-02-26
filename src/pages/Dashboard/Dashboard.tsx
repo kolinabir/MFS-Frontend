@@ -4,26 +4,29 @@ import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-// Assuming you are using React Router
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user, loading, signOut } = useContext(
     AuthContext
   ) as AuthContextProps;
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { toast } = useToast();
   const token = localStorage.getItem("token");
-  if (loading === false) {
-    if (user === null) {
+
+  // Use effect for navigation to ensure it happens after render
+  useEffect(() => {
+    if (!loading && user === null) {
       navigate("/");
     }
-  }
+  }, [loading, user, navigate]);
+
   const { data: userDetails } = useQuery({
     queryKey: ["userDetails"],
     queryFn: async () => {
       try {
-        // Assuming token is defined before this point
         const response = await axios.get(
           "http://localhost:5000/admin-control-panel/details",
           {
@@ -40,10 +43,10 @@ const Dashboard = () => {
       }
     },
     select: (data) => data,
+    // Don't execute the query if user is null or loading
+    enabled: !!user && !loading,
   });
 
-  const { toast } = useToast();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const handleToggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -56,6 +59,17 @@ const Dashboard = () => {
       description: "You have successfully signed out",
     });
   };
+
+  // You can return a loading indicator if still loading
+  if (loading) {
+    return <div className="p-4 sm:ml-64 mt-20">Loading dashboard...</div>;
+  }
+
+  // If not loading and no user, we'll redirect in the useEffect
+  // but still need to return something for this render
+  if (!user) {
+    return <div className="p-4 sm:ml-64 mt-20">Redirecting to login...</div>;
+  }
 
   return (
     <div>
