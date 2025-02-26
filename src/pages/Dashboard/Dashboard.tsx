@@ -13,6 +13,7 @@ const Dashboard = () => {
     AuthContext
   ) as AuthContextProps;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showBalance, setShowBalance] = useState(false);
   const { toast } = useToast();
   const token = localStorage.getItem("token");
 
@@ -47,8 +48,41 @@ const Dashboard = () => {
     enabled: !!user && !loading,
   });
 
+  const { data: balanceData, refetch: refetchBalance } = useQuery({
+    queryKey: ["userBalance"],
+    queryFn: async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/transaction/balance",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: String(token),
+            },
+          }
+        );
+        return response.data.data;
+      } catch (err: any) {
+        toast({
+          title: "Error",
+          description: `Failed to fetch balance: ${err.message}`,
+          variant: "destructive",
+        });
+        throw new Error(`Error fetching balance: ${err.message}`);
+      }
+    },
+    enabled: false, // Don't fetch automatically
+  });
+
   const handleToggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleToggleBalance = () => {
+    if (!showBalance) {
+      refetchBalance(); // Only fetch balance when revealing
+    }
+    setShowBalance(!showBalance);
   };
 
   const handleSignOut = () => {
@@ -106,6 +140,42 @@ const Dashboard = () => {
               </NavLink>
             </div>
             <div className="flex items-center">
+              {/* Balance Display */}
+              <div className="mr-4">
+                <button
+                  onClick={handleToggleBalance}
+                  className="flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300"
+                >
+                  <span className="mr-2">Balance:</span>
+                  <span className={showBalance ? "" : "filter blur-sm"}>
+                    {showBalance ? balanceData?.balance || "0" : "XXXXX.XX"}
+                  </span>
+                  <svg
+                    className="w-4 h-4 ml-1"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    {showBalance ? (
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 9l-7 7-7-7"
+                      ></path>
+                    ) : (
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      ></path>
+                    )}
+                  </svg>
+                </button>
+              </div>
+
               <div
                 className="flex items-center ms-3"
                 onClick={handleToggleDropdown}
