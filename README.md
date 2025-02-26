@@ -1,30 +1,135 @@
-# React + TypeScript + Vite
+# MFS-App Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+MFS-App is a modern frontend application built with React. This application provides a user-friendly interface for managing financial services.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- User authentication and authorization
+- Dashboard for financial overview
+- Transaction management
+- Account settings and profile management
+- Responsive design for mobile and desktop
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Prerequisites
 
-- Configure the top-level `parserOptions` property like this:
+Before you begin, ensure you have the following installed:
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+- Node.js (v14.0.0 or later)
+- npm (v6.0.0 or later) or Yarn (v1.22.0 or later)
+
+## Installation
+
+### Using npm
+
+```bash
+# Clone the repository
+git clone <repository-url>
+
+# Navigate to the project directory
+cd MFS-App-frontend
+
+# Install dependencies
+npm install
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### Using Yarn
+
+```bash
+# Clone the repository
+git clone <repository-url>
+
+# Navigate to the project directory
+cd MFS-App-frontend
+
+# Install dependencies
+yarn install
+```
+
+## Running the Application
+
+### Development Mode
+
+#### Using npm
+
+```bash
+npm start
+```
+
+#### Using Yarn
+
+```bash
+yarn start
+```
+
+The application will be available at `http://localhost:5173`.
+
+### Building for Production
+
+#### Using npm
+
+```bash
+npm run build
+```
+
+#### Using Yarn
+
+```bash
+yarn build
+```
+
+## Environment Variables
+
+Create a `.env` file in the root directory and add the following variables:
+
+```
+REACT_APP_API_URL=your_api_url
+REACT_APP_ENV=development
+```
+
+## Testing
+
+### Using npm
+
+```bash
+npm test
+```
+
+### Using Yarn
+
+```bash
+yarn test
+```
+
+## Project Structure
+
+```
+MFS-App-frontend/
+├── public/
+├── src/
+│   ├── assets/
+│   ├── components/
+│   ├── context/
+│   ├── hooks/
+│   ├── pages/
+│   ├── services/
+│   ├── utils/
+│   ├── App.js
+│   └── index.js
+├── .env
+├── package.json
+└── README.md
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch: `git checkout -b feature/my-new-feature`
+3. Commit your changes: `git commit -m 'Add some feature'`
+4. Push to the branch: `git push origin feature/my-new-feature`
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
