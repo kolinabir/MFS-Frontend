@@ -53,7 +53,23 @@ export function ViewTransactions() {
   } = useQuery({
     queryKey: ["transactions", mobileNumber],
     queryFn: fetchTransactions,
-    select: (data) => data.data,
+    select: (data) => {
+      // Handle the new data structure
+      if (
+        data.data.sendMoneyTransactions ||
+        data.data.cashOutTransactions ||
+        data.data.cashInTransactions
+      ) {
+        // Combine the three arrays into one for display
+        return [
+          ...(data.data.sendMoneyTransactions || []),
+          ...(data.data.cashOutTransactions || []),
+          ...(data.data.cashInTransactions || []),
+        ];
+      }
+      // Fallback for old data structure if needed
+      return data.data;
+    },
   });
 
   if (isLoading) {
@@ -63,6 +79,14 @@ export function ViewTransactions() {
   if (error) {
     return <p>Error: {error.message}</p>;
   }
+
+  // Calculate total amount from all transactions
+  const totalAmount =
+    transactions?.reduce(
+      (total: number, transaction: any) => total + (transaction.amount || 0),
+      0
+    ) || 0;
+
   return (
     <Table className="mt-20">
       <TableCaption>A list of your recent transactions.</TableCaption>
@@ -88,45 +112,42 @@ export function ViewTransactions() {
             <TableCell>
               {transaction?.transactionType === "SEND" && (
                 <>
-                  <strong>User:</strong> {transaction?.receiver.name}
-                  {transaction?.sender.name}
+                  <strong>User:</strong> {transaction?.receiver?.name || "N/A"}
                 </>
               )}
               {transaction?.transactionType === "CASH_OUT" && (
                 <>
-                  <strong>Agent:</strong> {transaction?.agent.name}
-                  {console.log(transaction)}
+                  <strong>Agent:</strong> {transaction?.agent?.name || "N/A"}
                 </>
               )}
-
               {transaction?.transactionType === "CASH_IN" && (
                 <>
                   <strong>{user?.role === "AGENT" ? " User" : " Agent"}</strong>{" "}
                   {user?.role === "AGENT"
-                    ? transaction?.user.name
-                    : transaction?.agent.name}
+                    ? transaction?.user?.name || "N/A"
+                    : transaction?.agent?.name || "N/A"}
                 </>
               )}
             </TableCell>
             <TableCell>
               {transaction?.transactionType === "SEND" && (
                 <>
-                  <strong>User:</strong> {transaction?.receiver?.mobileNumber}
-                  {transaction?.sender?.mobileNumber}
+                  <strong>User:</strong>{" "}
+                  {transaction?.receiver?.mobileNumber || "N/A"}
                 </>
               )}
-
               {transaction?.transactionType === "CASH_OUT" && (
                 <>
-                  <strong>Agent:</strong> {transaction?.agent.mobileNumber}
+                  <strong>Agent:</strong>{" "}
+                  {transaction?.agent?.mobileNumber || "N/A"}
                 </>
               )}
               {transaction?.transactionType === "CASH_IN" && (
                 <>
                   <strong>{user?.role === "AGENT" ? " User" : "Agent"}</strong>{" "}
                   {user?.role === "AGENT"
-                    ? transaction?.user.mobileNumber
-                    : transaction?.agent.mobileNumber}
+                    ? transaction?.user?.mobileNumber || "N/A"
+                    : transaction?.agent?.mobileNumber || "N/A"}
                 </>
               )}
             </TableCell>
@@ -136,13 +157,7 @@ export function ViewTransactions() {
       <TableFooter>
         <TableRow>
           <TableCell colSpan={2}>Total</TableCell>
-          <TableCell className="text-right">
-            {transactions?.reduce(
-              (total: any, transaction: { amount: any }) =>
-                total + transaction.amount,
-              0
-            )}
-          </TableCell>
+          <TableCell className="text-right">{totalAmount}</TableCell>
         </TableRow>
       </TableFooter>
     </Table>
