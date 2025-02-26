@@ -23,7 +23,7 @@ export function ViewTransactions() {
     try {
       if (user?.role === "ADMIN") {
         const response = await axios.get(
-          `http://localhost:5000/admin-control-panel/transaction/${mobileNumber}`,
+          `http://localhost:5000/transaction/transaction/${mobileNumber}`,
           {
             headers: {
               Authorization: `${localStorage.getItem("token")}`,
