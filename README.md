@@ -25,7 +25,7 @@ Before you begin, ensure you have the following installed:
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/kolinabir/MFS-Frontend
 
 # Navigate to the project directory
 cd MFS-App-frontend
@@ -38,7 +38,7 @@ npm install
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/kolinabir/MFS-Frontend
 
 # Navigate to the project directory
 cd MFS-App-frontend
@@ -86,6 +86,7 @@ Create a `.env` file in the root directory and add the following variables:
 ```
 REACT_APP_API_URL=your_api_url
 REACT_APP_ENV=development
+REACT_APP_BACKEND_URL=https://github.com/kolinabir/MFS-Backend
 ```
 
 ## Testing
