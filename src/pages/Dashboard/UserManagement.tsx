@@ -1,46 +1,55 @@
 "use client";
 
+import { Tabs } from "@/components/ui/tabs";
 import AgentCollection from "./AgentCollection";
 import NewAgentReq from "./NewAgentReq";
-import { Tabs } from "./Tabs";
 import UserCollection from "./UserCollection";
 
 export function UserManagement() {
   const tabs = [
     {
       title: "New Agent Request",
-      value: "Agent Request",
+      value: "agent-request",
       content: (
-        <div className="w-full overflow-hidden relative h-full rounded-2xl text-xl md:text-4xl font-bold text-white bg-gradient-to-br from-sky-900 to-sky-500 scroll-auto">
-          <h1 className="text-center">New Agent Request</h1>
-          <NewAgentReq></NewAgentReq>
+        <div className="w-full h-full overflow-auto bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
+            New Agent Request
+          </h2>
+          <NewAgentReq />
         </div>
       ),
     },
     {
       title: "User Collection",
-      value: "User Collection",
+      value: "user-collection",
       content: (
-        <div className="w-full overflow-hidden relative h-full rounded-2xl  text-xl md:text-4xl font-bold text-white bg-gradient-to-r from-cyan-500 to-blue-500">
-          <h1 className="text-center">User Collection</h1>
-          <UserCollection></UserCollection>
+        <div className="w-full h-full overflow-auto bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
+            User Collection
+          </h2>
+          <UserCollection />
         </div>
       ),
     },
     {
       title: "Agent Collection",
-      value: "Agent Collection",
+      value: "agent-collection",
       content: (
-        <div className="w-full overflow-hidden relative h-full rounded-2xl  text-xl md:text-4xl font-bold text-white bg-gradient-to-r from-emerald-500 to-emerald-900">
-          <h1 className="text-center">Agent Collection</h1>
-          <AgentCollection></AgentCollection>
+        <div className="w-full h-full overflow-auto bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
+            Agent Collection
+          </h2>
+          <AgentCollection />
         </div>
       ),
     },
   ];
 
   return (
-    <div className="h-[20rem] md:h-[40rem] [perspective:1000px] relative b flex flex-col max-w-5xl mx-auto w-full  items-start justify-start my-20">
+    <div className="min-h-[600px] bg-gray-50 dark:bg-gray-900 p-4 md:p-6 rounded-xl shadow-sm max-w-7xl mx-auto w-full">
+      <h1 className="text-2xl mt-8 font-bold text-gray-800 dark:text-white mb-6">
+        User Management
+      </h1>
       <Tabs tabs={tabs} />
     </div>
   );

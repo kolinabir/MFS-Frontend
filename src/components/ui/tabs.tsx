@@ -1,53 +1,124 @@
-import * as React from "react"
-import * as TabsPrimitive from "@radix-ui/react-tabs"
+"use client";
 
-import { cn } from "@/lib/utils"
+import React, { useState, ReactNode } from "react";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
-const Tabs = TabsPrimitive.Root
+type Tab = {
+  title: string;
+  value: string;
+  content: React.ReactNode;
+};
 
-const TabsList = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.List>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.List
-    ref={ref}
-    className={cn(
-      "inline-flex h-10 items-center justify-center rounded-md bg-slate-100 p-1 text-slate-500 dark:bg-slate-800 dark:text-slate-400",
-      className
-    )}
-    {...props}
-  />
-))
-TabsList.displayName = TabsPrimitive.List.displayName
+type TabsProps = {
+  tabs?: Tab[];
+  defaultValue?: string;
+  className?: string;
+  children?: ReactNode;
+};
 
-const TabsTrigger = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.Trigger
-    ref={ref}
-    className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-white data-[state=active]:text-slate-950 data-[state=active]:shadow-sm dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:data-[state=active]:bg-slate-950 dark:data-[state=active]:text-slate-50",
-      className
-    )}
-    {...props}
-  />
-))
-TabsTrigger.displayName = TabsPrimitive.Trigger.displayName
+export const Tabs = ({
+  tabs,
+  defaultValue,
+  className,
+  children,
+}: TabsProps) => {
+  // If tabs are provided, use the first tab's value as default if no defaultValue is provided
+  const initialValue =
+    defaultValue || (tabs && tabs.length > 0 ? tabs[0].value : "");
+  const [activeTab, setActiveTab] = useState<string>(initialValue);
 
-const TabsContent = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.Content
-    ref={ref}
-    className={cn(
-      "mt-2 ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300",
-      className
-    )}
-    {...props}
-  />
-))
-TabsContent.displayName = TabsPrimitive.Content.displayName
+  // If children are provided, use them directly (for backward compatibility)
+  if (children) {
+    return <div className={cn("w-full", className)}>{children}</div>;
+  }
 
-export { Tabs, TabsList, TabsTrigger, TabsContent }
+  // Otherwise, use the tabs prop to render tabbed interface
+  return (
+    <div className={cn("w-full h-full flex flex-col", className)}>
+      {/* Tab Navigation */}
+      <div className="relative border-b border-gray-200 dark:border-gray-700">
+        <div className="flex space-x-1 overflow-x-auto scrollbar-hide">
+          {tabs?.map((tab) => (
+            <button
+              key={tab.value}
+              id={`tab-${tab.value}`}
+              onClick={() => setActiveTab(tab.value)}
+              className={`py-3 px-4 text-sm font-medium transition-all duration-200 outline-none
+                ${
+                  activeTab === tab.value
+                    ? "text-blue-600 dark:text-blue-400"
+                    : "text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                }
+              `}
+            >
+              {tab.title}
+            </button>
+          ))}
+        </div>
+
+        {/* Active Tab Indicator */}
+        <motion.div
+          className="absolute bottom-0 h-0.5 bg-blue-600 dark:bg-blue-400"
+          layoutId="tabIndicator"
+          initial={false}
+          animate={{
+            width:
+              document.getElementById(`tab-${activeTab}`)?.offsetWidth || 0,
+            x: document.getElementById(`tab-${activeTab}`)?.offsetLeft || 0,
+          }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        />
+      </div>
+
+      {/* Tab Content */}
+      <div className="mt-4 flex-grow">
+        {tabs?.map((tab) => (
+          <div
+            key={tab.value}
+            className={`h-full transition-opacity duration-300 ${
+              activeTab === tab.value ? "block" : "hidden"
+            }`}
+          >
+            {tab.content}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Backward compatibility components for using Tabs with children
+export const TabsList = ({
+  className,
+  children,
+}: {
+  className?: string;
+  children: ReactNode;
+}) => {
+  return (
+    <div className={cn("flex justify-center my-8", className)}>{children}</div>
+  );
+};
+
+export const TabsTrigger = ({
+  className,
+  children,
+  value,
+  onClick,
+}: {
+  className?: string;
+  children: ReactNode;
+  value: string;
+  onClick?: () => void;
+}) => {
+  return (
+    <button
+      onClick={onClick}
+      className={cn("py-2 px-4 text-sm font-medium", className)}
+      value={value}
+    >
+      {children}
+    </button>
+  );
+};

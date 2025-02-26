@@ -108,73 +108,75 @@ const AgentCollection = () => {
   return (
     <div>
       <Tabs defaultValue="account" className="">
-        <div className="flex justify-center my-8 ">
-          <TabsList className="">
-            <TabsTrigger
-              onClick={() => {
-                setIsActivated(true);
-              }}
-              className="w-72"
-              value="account"
-            >
-              Active Agents
-            </TabsTrigger>
-            <TabsTrigger
-              onClick={() => {
-                setIsActivated(false);
-              }}
-              className="w-72"
-              value="password"
-            >
-              Blocked Agents
-            </TabsTrigger>
-          </TabsList>
-        </div>
+        <TabsList>
+          <TabsTrigger
+            onClick={() => {
+              setIsActivated(true);
+            }}
+            className="w-72 bg-white dark:bg-gray-800 border-b-2 border-transparent hover:border-blue-500 hover:text-blue-500 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600"
+            value="account"
+          >
+            Active Agents
+          </TabsTrigger>
+          <TabsTrigger
+            onClick={() => {
+              setIsActivated(false);
+            }}
+            className="w-72 bg-white dark:bg-gray-800 border-b-2 border-transparent hover:border-blue-500 hover:text-blue-500 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600"
+            value="password"
+          >
+            Blocked Agents
+          </TabsTrigger>
+        </TabsList>
       </Tabs>
 
-      <Table className="p-4  mt-14 scroll-auto">
-        <TableCaption>A list of your recent invoices.</TableCaption>
-        <TableHeader className="text-white">
-          <TableRow className="text-white font-bold">
-            <TableHead className="text-white">Name</TableHead>
-            <TableHead className="text-white">Mobile Number</TableHead>
-            <TableHead className="text-white">Email</TableHead>
-            <TableHead className="text-white">Role</TableHead>
-            <TableHead className="text-white">NID</TableHead>
-            <TableHead className="text-white">Balance</TableHead>
-            <TableHead className="text-white">Transactions</TableHead>
-            <TableHead className="text-white">Logins</TableHead>
-            <TableHead className="text-white">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-
-        <TableBody>
-          {activeUsers?.map((agent: Agent) => (
-            <TableRow key={agent._id}>
-              <TableCell>{agent.name}</TableCell>
-              <TableCell>{agent.mobileNumber}</TableCell>
-              <TableCell>{agent.email}</TableCell>
-              <TableCell>{agent.role}</TableCell>
-              <TableCell>{agent.nid}</TableCell>
-              <TableCell>{agent.balance}</TableCell>
-              <TableCell>
-                <NavLink to={`/dashboard/transactions/${agent.mobileNumber}`}>
-                  <Button>View</Button>
-                </NavLink>
-              </TableCell>
-              <TableCell>{agent.devicesLogins}</TableCell>
-              <TableCell>
-                <Button
-                  className=""
-                  onClick={() => handleActionButtonClick(agent)}
-                >
-                  {agent.isAccountActive ? "Block" : "UnBlock"}
-                </Button>
-              </TableCell>
+      <div className="bg-white dark:bg-gray-800 rounded-lg p-4 mt-4 shadow-sm">
+        <Table className="p-4 scroll-auto">
+          <TableCaption>
+            List of {isActivated ? "active" : "blocked"} agents.
+          </TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Mobile Number</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Role</TableHead>
+              <TableHead>NID</TableHead>
+              <TableHead>Balance</TableHead>
+              <TableHead>Transactions</TableHead>
+              <TableHead>Logins</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+
+          <TableBody>
+            {activeUsers?.map((agent: Agent) => (
+              <TableRow key={agent._id}>
+                <TableCell>{agent.name}</TableCell>
+                <TableCell>{agent.mobileNumber}</TableCell>
+                <TableCell>{agent.email}</TableCell>
+                <TableCell>{agent.role}</TableCell>
+                <TableCell>{agent.nid}</TableCell>
+                <TableCell>{agent.balance}</TableCell>
+                <TableCell>
+                  <NavLink to={`/dashboard/transactions/${agent.mobileNumber}`}>
+                    <Button>View</Button>
+                  </NavLink>
+                </TableCell>
+                <TableCell>{agent.devicesLogins}</TableCell>
+                <TableCell>
+                  <Button
+                    className=""
+                    onClick={() => handleActionButtonClick(agent)}
+                  >
+                    {agent.isAccountActive ? "Block" : "UnBlock"}
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };
